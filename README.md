@@ -23,3 +23,45 @@ token-usage -v
 - `CLAUDE_CONFIG_DIR`
 - `CODEX_HOME`
 - `OPENCODE_DATA_DIR`
+
+## find-duplicates
+
+`find_duplicates.py` 基于 MD5 查找指定目录下的重复文件，无需安装第三方依赖。
+
+```bash
+python find_duplicates.py /home/user/documents
+python find_duplicates.py .
+```
+
+原理：递归遍历所有文件，先按大小分组，仅对大小相同的文件计算 MD5，最后输出重复文件组及可回收空间。
+
+## renamer
+
+`renamer.py` 批量重命名文件，支持顺序编号和时间格式两种模式。
+
+```bash
+# 顺序编号
+python renamer ./photos --prefix trip --seq 3
+# trip_001.jpg, trip_002.png, trip_003.txt ...
+
+python renamer ./photos --seq 2 --begin 5 --suffix "_thumb"
+# 05_thumb.jpg, 06_thumb.png, 07_thumb.txt ...
+
+# 时间格式（取文件创建时间，输出 yyyyMMdd-HHmmss）
+python renamer ./photos --time
+# 20201112-155909.jpg, 20201112-155909-1.png, 20201112-160015.txt ...
+
+python renamer ./photos --prefix trip --time --suffix "_backup"
+# trip_20201112-155909_backup.jpg, trip_20201112-155909-1_backup.png ...
+```
+
+| 参数 | 说明 |
+|------|------|
+| `directory` | 目标目录 |
+| `--prefix` | 文件名前缀，默认为空 |
+| `--suffix` | 文件名后缀（扩展名前），默认为空 |
+| `--seq` | 顺序编号模式，指定位数（1-8） |
+| `--begin` | 起始序号（仅 --seq 模式），默认 1 |
+| `--time` | 时间格式模式，输出 yyyyMMdd-HHmmss |
+
+时间戳重复时自动追加 `-1`, `-2`, ... 后缀；子目录会被忽略并在末尾提示。
